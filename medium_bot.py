@@ -70,10 +70,10 @@ class MediumBot():
         
             #self.earnings()
             #self.followers()
-            self.stats()
+            #self.stats()
             #self.unfollow_all()
-            self.average_views()
-            #self.follow_random_article()
+            #self.average_views()
+            self.follow_random_article()
             self.driver.close()
         except:
             print("Something failed!\n")
@@ -119,7 +119,7 @@ class MediumBot():
         else:
             res = int(match2[0].replace(',',''))
         print("Current following: " + str(res))
-        final = 1574
+        final = 1595
         list = self.driver.find_elements_by_xpath("//span[contains(text(), 'Following')]")
         for i in range(res):
             sleep(0.25)
@@ -151,26 +151,34 @@ class MediumBot():
 
 
     def follow_random_article(self):
-        self.driver.get('https://blog.usejournal.com/one-word-spared-norway-from-covid-19-disaster-96c7f1853395')
+        self.driver.get('https://medium.com/swlh/facebooks-new-remote-salary-policy-is-barbaric-1fca3f451e67')
         sleep(3)
-        self.driver.find_element_by_xpath("/html/body/div/div/div[7]/div/div[1]/div/div[4]/div[1]/div[1]/span[2]/div/div[2]/div/h4/button").click()
-        sleep(5)
+        claps = self.driver.find_element_by_xpath("/html/body/div/div/div[7]/div/div[1]/div/div[5]/div[1]/div[1]/span[2]/div/div[2]/div/h4/button")
+        self.driver.execute_script("arguments[0].scrollIntoView()", claps)
+        sleep(3)
+        self.driver.find_element_by_xpath("/html/body/div/div/div[7]/div/div[1]/div/div[5]/div[1]/div[1]/span[2]/div/div[2]/div/h4/button").click()
+        sleep(10)
         show_more_claps = self.driver.find_element_by_xpath("//button[contains(text(), 'Show more claps')]")
 
 
         text = self.driver.find_element_by_xpath("/html/body/div[2]/div/div[1]/div/div[1]/h2").text
         split_string = text.split(" from ")
-        number_of_people = int(split_string[1].split(" ")[0]) - 1
-        number_of_rounds = math.floor(number_of_people / 10)
+        number_of_people = int(split_string[1].split(" ")[0])
+        number_of_rounds = math.floor(number_of_people / 10) - 2
+
+        if (number_of_rounds > 50):
+            number_of_rounds = 50
+
+        print(number_of_rounds)
 
         for i in range(number_of_rounds):
-            show_more_claps.click()
-            sleep(1)
             self.driver.execute_script("arguments[0].scrollIntoView()", show_more_claps)
+            sleep(1)
+            show_more_claps.click()
             sleep(2)
         cnt = 0
-        for i in range(2,number_of_rounds * 10):
-            follow_user = self.driver.find_element_by_xpath("/html/body/div[2]/div/div[1]/div/div[" + str(i) + "]/div/div[2]/button")
+        for i in range(number_of_rounds * 10, 2, -1):
+            follow_user = self.driver.find_element_by_xpath("/html/body/div[2]/div/div[1]/div/div[" + str(i-40) + "]/div/div[2]/button")
             self.driver.execute_script("arguments[0].scrollIntoView()", follow_user)
             sleep(1)
             if (follow_user.text == "Follow"):
