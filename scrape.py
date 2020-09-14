@@ -2,7 +2,7 @@ from selenium import webdriver
 from time import sleep
 import re
 from datetime import datetime
-from apscheduler.schedulers.blocking import BlockingScheduler
+import math
 
 from creditentials import username, password
 
@@ -13,7 +13,7 @@ class MediumBot():
         print("Current Time: ", current_time)
 
         self.driver = webdriver.Chrome()
-        #self.driver.minimize_window()
+        self.driver.minimize_window()
 
     def remove_cookies(self):
         close_popup = self.driver.find_element_by_xpath('//*[@id="container"]/div[1]/div/div/div[2]')
@@ -52,27 +52,28 @@ class MediumBot():
             sleep(1)
 
             #self.remove_cookies()
-            sign_in = self.driver.find_element_by_xpath('/html/body/div[1]/div/div[4]/div/div/div[3]/div/div[2]/h4/a')
+            sign_in = self.driver.find_element_by_xpath('/html/body/div[1]/div/div[5]/div/div/div[4]/div/div[2]/h4/span/a')
             sign_in.click()
 
-            facebook_sign_in = bot.driver.find_element_by_xpath('//*[@id="susi-modal-fb-button"]/div/a')
+            facebook_sign_in = bot.driver.find_element_by_xpath('/html/body/div[3]/div/div/div/div[2]/div/div/div/div/div[3]/div[2]/div/a')
             bot.driver.execute_script("arguments[0].click();", facebook_sign_in)
 
-            email_in = self.driver.find_element_by_xpath('//*[@id="email"]')
+            email_in = self.driver.find_element_by_xpath('/html/body/div[1]/div[4]/div[1]/div/div/div[2]/div[1]/form/div/div[1]/input')
             email_in.send_keys(username)
 
-            password_in = self.driver.find_element_by_xpath('//*[@id="pass"]')
+            password_in = self.driver.find_element_by_xpath('/html/body/div[1]/div[4]/div[1]/div/div/div[2]/div[1]/form/div/div[2]/input')
             password_in.send_keys(password)
 
-            log_in = self.driver.find_element_by_xpath('//*[@id="loginbutton"]')
+            log_in = self.driver.find_element_by_xpath('/html/body/div[1]/div[4]/div[1]/div/div/div[2]/div[1]/form/div/div[3]/button')
             log_in.click()
             sleep(5)
         
             #self.earnings()
             #self.followers()
             #self.stats()
-            self.unfollow_all()
-            #self.follow_random_article()
+            #self.unfollow_all()
+            #self.average_views()
+            self.follow_random_article()
             self.driver.close()
         except:
             print("Something failed!\n")
@@ -110,7 +111,7 @@ class MediumBot():
     def unfollow_all(self):
         self.driver.get('https://medium.com/@lazar.gugleta/following')
         sleep(3)
-        n = self.driver.find_element_by_xpath('/html/body/div[1]/div[2]/div/div[3]/div/div[2]/a[1]').get_attribute('title')
+        n = self.driver.find_element_by_xpath('/html/body/div[1]/div[2]/div/div[3]/div/div[1]/a[1]').get_attribute('title')
         match1 = [int(s) for s in n.split() if s.isdigit()]
         match2 = re.findall("([0-9]+[,.]+[0-9]+)", n)
         if not match2:
@@ -118,31 +119,87 @@ class MediumBot():
         else:
             res = int(match2[0].replace(',',''))
         print("Current following: " + str(res))
-        final = 940
+        final = 1655
         list = self.driver.find_elements_by_xpath("//span[contains(text(), 'Following')]")
-        for i in range(res):
-            sleep(0.25)
+        while len(list) < 150:
+            self.driver.execute_script("window.scrollBy(0,4000)")
+            sleep(1)
+            list = self.driver.find_elements_by_xpath("//span[contains(text(), 'Following')]")
+        #print(len(list))
+        pop_up = self.driver.find_element_by_xpath('/html/body/div[1]/div[1]/div/div/div[2]/button')
+        pop_up.click()
+        for i in range(len(list)):
+            sleep(0.15)
+            self.driver.execute_script("arguments[0].scrollIntoView()", list[i])
             list[i].click()
             res -= 1
             if res <= final:
                 print("Complete")
                 return False
 
-    def follow_random_article(self):
-        self.driver.get('https://medium.com/better-programming/why-most-code-sucks-ebc73b1a8882')
-        sleep(3)
-        self.driver.find_element_by_xpath('/html/body/div/div/div[5]/div/div[1]/div/div[4]/div[1]/div[2]/div/h4/button').click()
-        sleep(3)
-        i = 0
-        while(i < 10):
-            self.driver.find_element_by_xpath('/html/body/div[2]/div/div[1]/div/div[22]/button').click()
-            i+=1
-            sleep(2)
-        list = self.driver.find_elements_by_xpath("//button[contains(text(), 'Follow')]")
-        for i in range(100):
-            sleep(2)
-            list[i].click()
+        
 
+    def average_views(self):
+        self.driver.get('https://medium.com/me/stats')
+        sleep(3)
+        num_of_days = len(self.driver.find_elements_by_class_name('bargraph-bar'))
+        # print("There are",num_of_days, "days in total.") # number of days in graph
+        """ for x in num_of_days:
+            views_in_day = x.get_attribute('data-tooltip').rsplit(" ") """
+        total_views = self.driver.find_element_by_xpath('/html/body/div[1]/div[2]/div/div[3]/div/ul/li[1]/div/div[1]').text
+        
+        match1 = [int(s) for s in total_views.split() if s.isdigit()]
+        match2 = re.findall("([0-9]+[,.]+[0-9]+)", total_views)
+        if not match2:
+            res = match1[0]
+        else:
+            res = int(match2[0].replace(',',''))
+        print("Average views in", num_of_days, "days is", res/num_of_days)
+        
+            
+
+
+    def follow_random_article(self):
+        self.driver.get('https://elemental.medium.com/a-supercomputer-analyzed-covid-19-and-an-interesting-new-theory-has-emerged-31cb8eba9d63')
+        sleep(3)
+
+        
+        claps = self.driver.find_element_by_xpath("/html/body/div/div/div[7]/div/div[1]/div/div[4]/div/div[1]/div[1]/span[2]/div/div[2]/div/h4/button")
+        self.driver.execute_script("arguments[0].scrollIntoView(true)", claps)
+        sleep(3)
+        self.driver.find_element_by_xpath("/html/body/div/div/div[7]/div/div[1]/div/div[4]/div/div[1]/div[1]/span[2]/div/div[2]/div/h4/button").click()
+        sleep(10)
+        show_more_claps = self.driver.find_element_by_xpath("//button[contains(text(), 'Show more claps')]")
+
+
+        text = self.driver.find_element_by_xpath("/html/body/div[2]/div/div[1]/div/div[1]/h2").text
+        split_string = text.split(" from ")
+        number_of_people = int(split_string[1].split(" ")[0])
+        number_of_rounds = math.floor(number_of_people / 10) - 2
+
+        if (number_of_rounds > 50):
+            number_of_rounds = 50
+
+        print(number_of_rounds)
+
+        for i in range(number_of_rounds):
+            self.driver.execute_script("arguments[0].scrollIntoView()", show_more_claps)
+            sleep(1)
+            show_more_claps.click()
+            sleep(2)
+        cnt = 0
+        for i in range(number_of_rounds * 10, 2, -1):
+            follow_user = self.driver.find_element_by_xpath("/html/body/div[2]/div/div[1]/div/div[" + str(i-40) + "]/div/div[2]/button")
+            self.driver.execute_script("arguments[0].scrollIntoView()", follow_user)
+            sleep(1)
+            if (follow_user.text == "Follow"):
+                if (cnt == 150):
+                    break
+                cnt+=1
+                follow_user.click()
+                print("You just followed", cnt, "user(s)")
+                sleep(3)
+            
 while(1):
     bot = MediumBot()
     if not bot.login_facebook():
