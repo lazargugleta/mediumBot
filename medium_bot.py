@@ -12,7 +12,7 @@ class MediumBot():
     def __init__(self):
         now = datetime.now()
         current_time = now.strftime("%H:%M:%S")
-        print("Current Time: ", current_time)
+        #print("Current Time: ", current_time)
 
         self.driver = webdriver.Chrome()
         #self.driver.minimize_window()
@@ -146,9 +146,6 @@ class MediumBot():
         self.driver.get('https://medium.com/me/stats')
         sleep(3)
         num_of_days = len(self.driver.find_elements_by_class_name('bargraph-bar'))
-        # print("There are",num_of_days, "days in total.") # number of days in graph
-        """ for x in num_of_days:
-            views_in_day = x.get_attribute('data-tooltip').rsplit(" ") """
         total_views = self.driver.find_element_by_xpath('/html/body/div[1]/div[2]/div/div[3]/div/ul/li[1]/div/div[1]').text
         
         match1 = [int(s) for s in total_views.split() if s.isdigit()]
@@ -160,7 +157,6 @@ class MediumBot():
         print("Average views in", num_of_days, "days is", res/num_of_days)
         
             
-
 
     def follow_random_article(self):
         self.driver.get('https://elemental.medium.com/a-supercomputer-analyzed-covid-19-and-an-interesting-new-theory-has-emerged-31cb8eba9d63')
@@ -178,29 +174,27 @@ class MediumBot():
         number_of_people = int(split_string[1].split(" ")[0])
         number_of_rounds = math.floor(number_of_people / 10) - 2
 
-        if (number_of_rounds > 30):
-            number_of_rounds = 30
-
-        print(number_of_rounds)
+        if (number_of_rounds > 25):
+            number_of_rounds = 25
 
         for i in range(number_of_rounds):
             self.driver.execute_script("arguments[0].scrollIntoView(true)", show_more_claps)
-            sleep(2.5)
-            show_more_claps.click()
             sleep(1)
+            show_more_claps.click()
+            sleep(0.5)
         cnt = 0
         for i in range(number_of_rounds * 10, 2, -1):
             follow_user = self.driver.find_element_by_xpath("/html/body/div[2]/div/div[1]/div/div[" + str(i-40) + "]/div/div[2]/button")
             self.driver.execute_script("arguments[0].scrollIntoView()", follow_user)
-            sleep(1)
+            sleep(0.15)
             if (follow_user.text == "Follow"):
                 if (cnt == 150):
                     break
                 cnt+=1
                 follow_user.click()
-                sys.stdout.write("\033[F")
+                if (cnt > 1):
+                    sys.stdout.write("\033[F")
                 print(colored('You just followed', 'blue'), colored(cnt, 'yellow'), colored('user(s)', 'yellow'))
-                #print("You just followed", cnt, "user(s)")
                 sleep(3)
             
 while(1):
