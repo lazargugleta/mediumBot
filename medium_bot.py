@@ -1,4 +1,6 @@
 from selenium import webdriver
+from termcolor import colored
+import sys
 from time import sleep
 import re
 from datetime import datetime
@@ -13,7 +15,7 @@ class MediumBot():
         print("Current Time: ", current_time)
 
         self.driver = webdriver.Chrome()
-        self.driver.minimize_window()
+        #self.driver.minimize_window()
 
     def remove_cookies(self):
         close_popup = self.driver.find_element_by_xpath('//*[@id="container"]/div[1]/div/div/div[2]')
@@ -107,6 +109,7 @@ class MediumBot():
         last_story_fans = self.driver.find_element_by_xpath('/html/body/div[1]/div[2]/div/div[3]/div/div[4]/table/tbody/tr[2]/td[5]/span[2]')
         print("Last story: " + last_story_views.text + " views, " + last_story_reads.text + " reads and " + last_story_fans.text + " fans\n")
         new_val = total_views.text
+        return True
 
     def unfollow_all(self):
         self.driver.get('https://medium.com/@lazar.gugleta/following')
@@ -119,7 +122,7 @@ class MediumBot():
         else:
             res = int(match2[0].replace(',',''))
         print("Current following: " + str(res))
-        final = 1655
+        final = 1674
         list = self.driver.find_elements_by_xpath("//span[contains(text(), 'Following')]")
         while len(list) < 150:
             self.driver.execute_script("window.scrollBy(0,4000)")
@@ -129,7 +132,7 @@ class MediumBot():
         pop_up = self.driver.find_element_by_xpath('/html/body/div[1]/div[1]/div/div/div[2]/button')
         pop_up.click()
         for i in range(len(list)):
-            sleep(0.15)
+            sleep(0.1)
             self.driver.execute_script("arguments[0].scrollIntoView()", list[i])
             list[i].click()
             res -= 1
@@ -162,7 +165,6 @@ class MediumBot():
     def follow_random_article(self):
         self.driver.get('https://elemental.medium.com/a-supercomputer-analyzed-covid-19-and-an-interesting-new-theory-has-emerged-31cb8eba9d63')
         sleep(3)
-
         
         claps = self.driver.find_element_by_xpath("/html/body/div/div/div[7]/div/div[1]/div/div[4]/div/div[1]/div[1]/span[2]/div/div[2]/div/h4/button")
         self.driver.execute_script("arguments[0].scrollIntoView(true)", claps)
@@ -171,22 +173,21 @@ class MediumBot():
         sleep(10)
         show_more_claps = self.driver.find_element_by_xpath("//button[contains(text(), 'Show more claps')]")
 
-
         text = self.driver.find_element_by_xpath("/html/body/div[2]/div/div[1]/div/div[1]/h2").text
         split_string = text.split(" from ")
         number_of_people = int(split_string[1].split(" ")[0])
         number_of_rounds = math.floor(number_of_people / 10) - 2
 
-        if (number_of_rounds > 50):
-            number_of_rounds = 50
+        if (number_of_rounds > 30):
+            number_of_rounds = 30
 
         print(number_of_rounds)
 
         for i in range(number_of_rounds):
-            self.driver.execute_script("arguments[0].scrollIntoView()", show_more_claps)
-            sleep(1)
+            self.driver.execute_script("arguments[0].scrollIntoView(true)", show_more_claps)
+            sleep(2.5)
             show_more_claps.click()
-            sleep(2)
+            sleep(1)
         cnt = 0
         for i in range(number_of_rounds * 10, 2, -1):
             follow_user = self.driver.find_element_by_xpath("/html/body/div[2]/div/div[1]/div/div[" + str(i-40) + "]/div/div[2]/button")
@@ -197,7 +198,9 @@ class MediumBot():
                     break
                 cnt+=1
                 follow_user.click()
-                print("You just followed", cnt, "user(s)")
+                sys.stdout.write("\033[F")
+                print(colored('You just followed', 'blue'), colored(cnt, 'yellow'), colored('user(s)', 'yellow'))
+                #print("You just followed", cnt, "user(s)")
                 sleep(3)
             
 while(1):
