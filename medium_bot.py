@@ -75,10 +75,10 @@ class MediumBot():
             #self.stats()
             #self.unfollow_all()
             #self.average_views()
-            self.follow_random_article()
+            #self.follow_random_article()
             self.driver.close()
         except:
-            print("Something failed!\n")
+            print(colored("Something failed!\n", "red"))
             self.driver.close()
             return True
             
@@ -88,27 +88,39 @@ class MediumBot():
         sleep(3)
         #self.remove_cookies()
         total_earnings = self.driver.find_element_by_xpath('/html/body/div[1]/div[2]/div/div[3]/section/div/div[2]/div/div/div/div[3]')
-        print("You made " + total_earnings.text + " this month")
+        print(colored("You made", "green"), colored(total_earnings.text, "blue"), colored("this month", "green"))
+        return True
     
     def followers(self):
         self.driver.get('https://medium.com/@lazar.gugleta')
         sleep(3)
-        num_of_followers = self.driver.find_element_by_xpath('/html/body/div/div/section/div[1]/div[2]/div[2]/div[4]/span/div/div[2]/a').getAttribute("title")
-        print("You have: "+ num_of_followers.text)
+        num_of_followers = self.driver.find_element_by_xpath('/html/body/div/div/section/div[1]/div[2]/div[2]/div[4]/span/div/div[2]/a')        
+        print(colored("You have: ", "blue" ) + colored(num_of_followers.text, "yellow"))
+        return True
 
     def stats(self):
         global new_val
         self.driver.get('https://medium.com/me/stats')
         sleep(3)
+        num_of_days = len(self.driver.find_elements_by_class_name('bargraph-bar'))
         total_views = self.driver.find_element_by_xpath('/html/body/div[1]/div[2]/div/div[3]/div/ul/li[1]/div/div[1]')
-        print("30 days views: " + total_views.text + " views")
+        print(colored("30 days views: ", "blue") + colored(total_views.text, "yellow") + colored(" views", "blue"))
         total_reads = self.driver.find_element_by_xpath('/html/body/div[1]/div[2]/div/div[3]/div/ul/li[2]/div/div[1]')
-        print("30 days reads: " + total_reads.text)
+        print(colored("30 days reads: ", "blue") + colored(total_reads.text, "yellow"))
         last_story_views = self.driver.find_element_by_xpath('/html/body/div[1]/div[2]/div/div[3]/div/div[4]/table/tbody/tr[2]/td[2]/span[2]')
         last_story_reads = self.driver.find_element_by_xpath('/html/body/div[1]/div[2]/div/div[3]/div/div[4]/table/tbody/tr[2]/td[3]/span[2]')
         last_story_fans = self.driver.find_element_by_xpath('/html/body/div[1]/div[2]/div/div[3]/div/div[4]/table/tbody/tr[2]/td[5]/span[2]')
-        print("Last story: " + last_story_views.text + " views, " + last_story_reads.text + " reads and " + last_story_fans.text + " fans\n")
+        print(colored("Last story: ", "blue") + colored(last_story_views.text, "yellow") + colored(" views, ", "yellow") + colored(last_story_reads.text, "yellow") + colored(" reads and ", "yellow") + colored(last_story_fans.text, "yellow") + colored(" fans", "yellow"))
         new_val = total_views.text
+        #average views
+        match1 = [int(s) for s in total_views.text.split() if s.isdigit()]
+        match2 = re.findall("([0-9]+[,.]+[0-9]+)", total_views.text)
+        if not match2:
+            res = match1[0]
+        else:
+            res = int(match2[0].replace(',',''))
+        
+        print(colored("Average views in", "blue") , colored(num_of_days, "yellow"),  colored("days is", "blue") , colored(round(res/num_of_days, 2), "yellow"))
         return True
 
     def unfollow_all(self):
@@ -121,14 +133,13 @@ class MediumBot():
             res = match1[0]
         else:
             res = int(match2[0].replace(',',''))
-        print("Current following: " + str(res))
+        print(colored("Currently following: ", "blue") + colored(str(res), "yellow") + colored(" users", "yellow"))
         final = 1674
         list = self.driver.find_elements_by_xpath("//span[contains(text(), 'Following')]")
         while len(list) < 150:
             self.driver.execute_script("window.scrollBy(0,4000)")
             sleep(1)
             list = self.driver.find_elements_by_xpath("//span[contains(text(), 'Following')]")
-        #print(len(list))
         pop_up = self.driver.find_element_by_xpath('/html/body/div[1]/div[1]/div/div/div[2]/button')
         pop_up.click()
         for i in range(len(list)):
@@ -137,7 +148,7 @@ class MediumBot():
             list[i].click()
             res -= 1
             if res <= final:
-                print("Complete")
+                print(colored("Complete", "green"))
                 return False
 
         
@@ -154,7 +165,7 @@ class MediumBot():
             res = match1[0]
         else:
             res = int(match2[0].replace(',',''))
-        print("Average views in", num_of_days, "days is", res/num_of_days)
+        print(colored("Average views in", "blue") , colored(num_of_days, "yellow"),  colored("days is", "blue") , colored(res/num_of_days, "yellow"))
         
             
 
