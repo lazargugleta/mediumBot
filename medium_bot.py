@@ -70,11 +70,10 @@ class MediumBot():
             log_in.click()
             sleep(5)
         
-            #self.earnings()
-            #self.followers()
-            #self.stats()
-            #self.unfollow_all()
-            #self.average_views()
+            self.earnings()
+            self.followers()
+            self.stats()
+            self.unfollow_all()
             #self.follow_random_article()
             self.driver.close()
         except:
@@ -88,14 +87,14 @@ class MediumBot():
         sleep(3)
         #self.remove_cookies()
         total_earnings = self.driver.find_element_by_xpath('/html/body/div[1]/div[2]/div/div[3]/section/div/div[2]/div/div/div/div[3]')
-        print(colored("You made", "green"), colored(total_earnings.text, "blue"), colored("this month", "green"))
+        print(colored("You made", "blue"), colored(total_earnings.text, "magenta"), colored("this month", "blue"))
         return True
     
     def followers(self):
         self.driver.get('https://medium.com/@lazar.gugleta')
         sleep(3)
         num_of_followers = self.driver.find_element_by_xpath('/html/body/div/div/section/div[1]/div[2]/div[2]/div[4]/span/div/div[2]/a')        
-        print(colored("You have: ", "blue" ) + colored(num_of_followers.text, "yellow"))
+        print(colored("You have: ", "blue" ) + colored(num_of_followers.text, "magenta"))
         return True
 
     def stats(self):
@@ -104,13 +103,13 @@ class MediumBot():
         sleep(3)
         num_of_days = len(self.driver.find_elements_by_class_name('bargraph-bar'))
         total_views = self.driver.find_element_by_xpath('/html/body/div[1]/div[2]/div/div[3]/div/ul/li[1]/div/div[1]')
-        print(colored("30 days views: ", "blue") + colored(total_views.text, "yellow") + colored(" views", "blue"))
+        print(colored("30 days views: ", "blue") + colored(total_views.text, "magenta") + colored(" views", "blue"))
         total_reads = self.driver.find_element_by_xpath('/html/body/div[1]/div[2]/div/div[3]/div/ul/li[2]/div/div[1]')
-        print(colored("30 days reads: ", "blue") + colored(total_reads.text, "yellow"))
+        print(colored("30 days reads: ", "blue") + colored(total_reads.text, "magenta"))
         last_story_views = self.driver.find_element_by_xpath('/html/body/div[1]/div[2]/div/div[3]/div/div[4]/table/tbody/tr[2]/td[2]/span[2]')
         last_story_reads = self.driver.find_element_by_xpath('/html/body/div[1]/div[2]/div/div[3]/div/div[4]/table/tbody/tr[2]/td[3]/span[2]')
         last_story_fans = self.driver.find_element_by_xpath('/html/body/div[1]/div[2]/div/div[3]/div/div[4]/table/tbody/tr[2]/td[5]/span[2]')
-        print(colored("Last story: ", "blue") + colored(last_story_views.text, "yellow") + colored(" views, ", "yellow") + colored(last_story_reads.text, "yellow") + colored(" reads and ", "yellow") + colored(last_story_fans.text, "yellow") + colored(" fans", "yellow"))
+        print(colored("Last story: ", "blue") + colored(last_story_views.text, "magenta") + colored(" views, ", "magenta") + colored(last_story_reads.text, "magenta") + colored(" reads and ", "magenta") + colored(last_story_fans.text, "magenta") + colored(" fans", "magenta"))
         new_val = total_views.text
         #average views
         match1 = [int(s) for s in total_views.text.split() if s.isdigit()]
@@ -120,7 +119,7 @@ class MediumBot():
         else:
             res = int(match2[0].replace(',',''))
         
-        print(colored("Average views in", "blue") , colored(num_of_days, "yellow"),  colored("days is", "blue") , colored(round(res/num_of_days, 2), "yellow"))
+        print(colored("Average views in", "blue") , colored(num_of_days, "magenta"),  colored("days is", "blue") , colored(round(res/num_of_days, 2), "magenta"))
         return True
 
     def unfollow_all(self):
@@ -133,7 +132,7 @@ class MediumBot():
             res = match1[0]
         else:
             res = int(match2[0].replace(',',''))
-        print(colored("Currently following: ", "blue") + colored(str(res), "yellow") + colored(" users", "yellow"))
+        print(colored("Currently following: ", "blue") + colored(str(res), "magenta") + colored(" users", "magenta"))
         final = 1674
         list = self.driver.find_elements_by_xpath("//span[contains(text(), 'Following')]")
         while len(list) < 150:
@@ -165,7 +164,7 @@ class MediumBot():
             res = match1[0]
         else:
             res = int(match2[0].replace(',',''))
-        print(colored("Average views in", "blue") , colored(num_of_days, "yellow"),  colored("days is", "blue") , colored(res/num_of_days, "yellow"))
+        print(colored("Average views in", "blue") , colored(num_of_days, "magenta"),  colored("days is", "blue") , colored(res/num_of_days, "magenta"))
         
             
 
@@ -205,9 +204,9 @@ class MediumBot():
                 follow_user.click()
                 if (cnt > 1):
                     sys.stdout.write("\033[F")
-                print(colored('You just followed', 'blue'), colored(cnt, 'yellow'), colored('user(s)', 'yellow'))
+                print(colored('You just followed', 'blue'), colored(cnt, 'magenta'), colored('user(s)', 'magenta'))
                 sleep(3)
-            
+           
 while(1):
     bot = MediumBot()
     if not bot.login_facebook():
