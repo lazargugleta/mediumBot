@@ -70,11 +70,11 @@ class MediumBot():
             log_in.click()
             sleep(5)
         
-            self.earnings()
-            self.followers()
-            self.stats()
-            self.unfollow_all()
-            #self.follow_random_article()
+            #self.earnings()
+            #self.followers()
+            #self.stats()
+            #self.unfollow_all()
+            self.follow_random_article()
             self.driver.close()
         except:
             print(colored("Something failed!\n", "red"))
