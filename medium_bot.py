@@ -184,12 +184,12 @@ class MediumBot():
         number_of_people = int(split_string[1].split(" ")[0])
         number_of_rounds = math.floor(number_of_people / 10) - 2
 
-        if (number_of_rounds > 25):
-            number_of_rounds = 25
+        if (number_of_rounds > 100):
+            number_of_rounds = 100
 
         for i in range(number_of_rounds):
             self.driver.execute_script("arguments[0].scrollIntoView(true)", show_more_claps)
-            sleep(1)
+            sleep(1.5)
             show_more_claps.click()
             sleep(0.5)
         cnt = 0
