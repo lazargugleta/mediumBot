@@ -5,6 +5,7 @@ from time import sleep
 import re
 from datetime import datetime
 import math
+from huepy import *
 
 from creditentials import username, password
 
@@ -72,9 +73,9 @@ class MediumBot():
         
             #self.earnings()
             #self.followers()
-            #self.stats()
+            self.stats()
             #self.unfollow_all()
-            self.follow_random_article()
+            #self.follow_random_article()
             self.driver.close()
         except:
             print(colored("Something failed!\n", "red"))
@@ -109,7 +110,10 @@ class MediumBot():
         last_story_views = self.driver.find_element_by_xpath('/html/body/div[1]/div[2]/div/div[3]/div/div[4]/table/tbody/tr[2]/td[2]/span[2]')
         last_story_reads = self.driver.find_element_by_xpath('/html/body/div[1]/div[2]/div/div[3]/div/div[4]/table/tbody/tr[2]/td[3]/span[2]')
         last_story_fans = self.driver.find_element_by_xpath('/html/body/div[1]/div[2]/div/div[3]/div/div[4]/table/tbody/tr[2]/td[5]/span[2]')
-        print(colored("Last story: ", "blue") + colored(last_story_views.text, "magenta") + colored(" views, ", "magenta") + colored(last_story_reads.text, "magenta") + colored(" reads and ", "magenta") + colored(last_story_fans.text, "magenta") + colored(" fans", "magenta"))
+        views_nr = last_story_views.text.split()[0]
+        reads_nr = last_story_reads.text.split()[0]
+        fans_nr = last_story_fans.text.split()[0]
+        print(blue("Last story:"), purple(views_nr) + "\n" +blue("Reads:") , purple(reads_nr) + "\n" + blue("Fans:") , purple(fans_nr))
         new_val = total_views.text
         #average views
         match1 = [int(s) for s in total_views.text.split() if s.isdigit()]
@@ -119,7 +123,7 @@ class MediumBot():
         else:
             res = int(match2[0].replace(',',''))
         
-        print(colored("Average views in", "blue") , colored(num_of_days, "magenta"),  colored("days is", "blue") , colored(round(res/num_of_days, 2), "magenta"))
+        print(colored("Average views in", "blue") , colored(num_of_days, "magenta"),  colored("days is", "blue") , bold(colored(round(res/num_of_days, 2), "magenta")))
         return True
 
     def unfollow_all(self):
