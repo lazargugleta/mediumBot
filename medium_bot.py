@@ -104,16 +104,16 @@ class MediumBot():
         sleep(3)
         num_of_days = len(self.driver.find_elements_by_class_name('bargraph-bar'))
         total_views = self.driver.find_element_by_xpath('/html/body/div[1]/div[2]/div/div[3]/div/ul/li[1]/div/div[1]')
-        print(colored("30 days views: ", "blue") + colored(total_views.text, "magenta") + colored(" views", "blue"))
+        print(colored("30 days views: ", "blue") + bold(colored(total_views.text, "magenta")) + colored(" views", "blue"))
         total_reads = self.driver.find_element_by_xpath('/html/body/div[1]/div[2]/div/div[3]/div/ul/li[2]/div/div[1]')
-        print(colored("30 days reads: ", "blue") + colored(total_reads.text, "magenta"))
+        print(colored("30 days reads: ", "blue") + bold(colored(total_reads.text, "magenta")))
         last_story_views = self.driver.find_element_by_xpath('/html/body/div[1]/div[2]/div/div[3]/div/div[4]/table/tbody/tr[2]/td[2]/span[2]')
         last_story_reads = self.driver.find_element_by_xpath('/html/body/div[1]/div[2]/div/div[3]/div/div[4]/table/tbody/tr[2]/td[3]/span[2]')
         last_story_fans = self.driver.find_element_by_xpath('/html/body/div[1]/div[2]/div/div[3]/div/div[4]/table/tbody/tr[2]/td[5]/span[2]')
         views_nr = last_story_views.text.split()[0]
         reads_nr = last_story_reads.text.split()[0]
         fans_nr = last_story_fans.text.split()[0]
-        print(blue("Last story:"), purple(views_nr) + "\n" +blue("Reads:") , purple(reads_nr) + "\n" + blue("Fans:") , purple(fans_nr))
+        print(blue("Last story:"), bold(purple(views_nr)) + "\n" +blue("Reads:") , bold(purple(reads_nr)) + "\n" + blue("Fans:") , bold(purple(fans_nr)))
         new_val = total_views.text
         #average views
         match1 = [int(s) for s in total_views.text.split() if s.isdigit()]
