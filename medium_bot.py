@@ -49,7 +49,7 @@ class MediumBot():
         done_with_password.click()
 
     def login_facebook(self):
-        #try:
+        try:
             self.driver.get('https://medium.com/')
 
             sleep(1)
@@ -75,12 +75,13 @@ class MediumBot():
             #self.followers()
             #self.stats()
             #self.unfollow_all()
-            self.follow_random_article()
+            #self.follow_random_article()
             self.driver.close()
-        #except:
+        except:
             print(colored("Something failed!\n", "red"))
             self.driver.close()
             return True
+
             
 
     def earnings(self):
@@ -137,7 +138,7 @@ class MediumBot():
         else:
             res = int(match2[0].replace(',',''))
         print(colored("Currently following: ", "blue") + colored(str(res), "magenta") + colored(" users", "magenta"))
-        final = 1722
+        final = 1789
         list = self.driver.find_elements_by_xpath("//span[contains(text(), 'Following')]")
         while len(list) < (res-final):
             self.driver.execute_script("window.scrollBy(0,4000)")
@@ -173,13 +174,13 @@ class MediumBot():
             
 
     def follow_random_article(self):
-        self.driver.get('https://elemental.medium.com/a-supercomputer-analyzed-covid-19-and-an-interesting-new-theory-has-emerged-31cb8eba9d63')
+        self.driver.get('https://obama.medium.com/my-statement-on-the-passing-of-justice-ruth-bader-ginsburg-5a925b627457')
         sleep(3)
-        
-        claps = self.driver.find_element_by_xpath("/html/body/div/div/div[7]/div/div[1]/div/div[4]/div/div[1]/div[1]/span[2]/div/div[2]/div/h4/button")
+        self.driver.execute_script("window.scrollBy(0,4000)")
+        claps = self.driver.find_element_by_xpath("/html/body/div/div/div[7]/div/div[1]/div/div[3]/div/div[1]/div[1]/span[2]/div/div[2]/div/h4/button")
         self.driver.execute_script("arguments[0].scrollIntoView(true)", claps)
         sleep(3)
-        self.driver.find_element_by_xpath("/html/body/div/div/div[7]/div/div[1]/div/div[4]/div/div[1]/div[1]/span[2]/div/div[2]/div/h4/button").click()
+        self.driver.find_element_by_xpath("/html/body/div/div/div[7]/div/div[1]/div/div[3]/div/div[1]/div[1]/span[2]/div/div[2]/div/h4/button").click()
         sleep(10)
         show_more_claps = self.driver.find_element_by_xpath("//button[contains(text(), 'Show more claps')]")
 
@@ -188,17 +189,17 @@ class MediumBot():
         number_of_people = int(split_string[1].split(" ")[0])
         number_of_rounds = math.floor(number_of_people / 10) - 2
 
-        if (number_of_rounds > 50):
-            number_of_rounds = 50
+        if (number_of_rounds > 30):
+            number_of_rounds = 30
 
         for i in range(number_of_rounds):
             self.driver.execute_script("arguments[0].scrollIntoView(true)", show_more_claps)
             sleep(1.5)
             show_more_claps.click()
-            sleep(0.5)
+            sleep(1)
         cnt = 0
         for i in range(number_of_rounds * 10, 2, -1):
-            follow_user = self.driver.find_element_by_xpath("/html/body/div[2]/div/div[1]/div/div[" + str(i-20) + "]/div/div[2]/button")
+            follow_user = self.driver.find_element_by_xpath("/html/body/div[2]/div/div[1]/div/div[" + str(i) + "]/div/div[2]/button")
             self.driver.execute_script("arguments[0].scrollIntoView()", follow_user)
             sleep(0.15)
             if (follow_user.text == "Follow"):
