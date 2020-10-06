@@ -49,7 +49,7 @@ class MediumBot():
         done_with_password.click()
 
     def login_facebook(self):
-        try:
+        #try:
             self.driver.get('https://medium.com/')
 
             sleep(1)
@@ -61,13 +61,18 @@ class MediumBot():
             facebook_sign_in = bot.driver.find_element_by_xpath('/html/body/div[3]/div/div/div/div[2]/div/div/div/div/div[3]/div[2]/div/a')
             bot.driver.execute_script("arguments[0].click();", facebook_sign_in)
 
-            email_in = self.driver.find_element_by_xpath('/html/body/div[1]/div[4]/div[1]/div/div/div[2]/div[1]/form/div/div[1]/input')
+            sleep(2)
+            accept_cookie = self.driver.find_element_by_xpath('/html/body/div[3]/div[2]/div/div/div/div/div[3]/button[2]')
+            accept_cookie.click()
+            sleep(0.5)
+
+            email_in = self.driver.find_element_by_xpath('/html/body/div[1]/div[3]/div[1]/div/div/div[2]/div[1]/form/div/div[1]/input')
             email_in.send_keys(username)
 
-            password_in = self.driver.find_element_by_xpath('/html/body/div[1]/div[4]/div[1]/div/div/div[2]/div[1]/form/div/div[2]/input')
+            password_in = self.driver.find_element_by_xpath('/html/body/div[1]/div[3]/div[1]/div/div/div[2]/div[1]/form/div/div[2]/input')
             password_in.send_keys(password)
 
-            log_in = self.driver.find_element_by_xpath('/html/body/div[1]/div[4]/div[1]/div/div/div[2]/div[1]/form/div/div[3]/button')
+            log_in = self.driver.find_element_by_xpath('/html/body/div[1]/div[3]/div[1]/div/div/div[2]/div[1]/form/div/div[3]/button')
             log_in.click()
             sleep(5)
         
@@ -77,7 +82,7 @@ class MediumBot():
             #self.unfollow_all()
             self.follow_random_article()
             self.driver.close()
-        except:
+        #except:
             print(colored("Something failed!\n", "red"))
             self.driver.close()
             return True
@@ -138,7 +143,7 @@ class MediumBot():
         else:
             res = int(match2[0].replace(',',''))
         print(colored("Currently following: ", "blue") + colored(str(res), "magenta") + colored(" users", "magenta"))
-        final = 1793
+        final = 1800
         list = self.driver.find_elements_by_xpath("//span[contains(text(), 'Following')]")
         while len(list) < (res-final):
             self.driver.execute_script("window.scrollBy(0,4000)")
