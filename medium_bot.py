@@ -49,7 +49,7 @@ class MediumBot():
         done_with_password.click()
 
     def login_facebook(self):
-        #try:
+        try:
             self.driver.get('https://medium.com/')
 
             sleep(1)
@@ -82,7 +82,7 @@ class MediumBot():
             #self.unfollow_all()
             self.follow_random_article()
             self.driver.close()
-        #except:
+        except:
             print(colored("Something failed!\n", "red"))
             self.driver.close()
             return True
@@ -143,7 +143,7 @@ class MediumBot():
         else:
             res = int(match2[0].replace(',',''))
         print(colored("Currently following: ", "blue") + colored(str(res), "magenta") + colored(" users", "magenta"))
-        final = 1800
+        final = 1804
         list = self.driver.find_elements_by_xpath("//span[contains(text(), 'Following')]")
         while len(list) < (res-final):
             self.driver.execute_script("window.scrollBy(0,4000)")
@@ -213,6 +213,7 @@ class MediumBot():
             sleep(0.15)
             if (follow_user.text == "Follow"):
                 if (cnt == 150):
+                    print(green("Complete!"))
                     break
                 cnt+=1
                 follow_user.click()
