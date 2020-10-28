@@ -52,13 +52,20 @@ class MediumBot():
         try:
             self.driver.get('https://medium.com/')
 
+            sleep(2)
+
+            
+            #self.remove_cookies()
+
+            pop_up = self.driver.find_element_by_xpath('/html/body/div[2]/div/div/div/div/div/div/button')
+            pop_up.click()
+
             sleep(1)
 
-            #self.remove_cookies()
-            sign_in = self.driver.find_element_by_xpath('/html/body/div[1]/div/div[5]/div/div/div[4]/div/div[2]/h4/span/a')
-            sign_in.click()
+            get_started = self.driver.find_element_by_xpath('/html/body/div/div/div[3]/div/div[1]/div/div/div/div[3]/div/div/span/a/button')
+            get_started.click()
 
-            facebook_sign_in = bot.driver.find_element_by_xpath('/html/body/div[3]/div/div/div/div[2]/div/div/div/div/div[3]/div[2]/div/a')
+            facebook_sign_in = bot.driver.find_element_by_xpath("//*[contains(text(), 'Facebook')]")
             bot.driver.execute_script("arguments[0].click();", facebook_sign_in)
 
             sleep(2)
@@ -79,7 +86,7 @@ class MediumBot():
             #self.earnings()
             #self.followers()
             #self.stats()
-            #self.unfollow_all()
+            self.unfollow_all()
             self.follow_random_article()
             self.driver.close()
         except:
@@ -143,14 +150,14 @@ class MediumBot():
         else:
             res = int(match2[0].replace(',',''))
         print(colored("Currently following: ", "blue") + colored(str(res), "magenta") + colored(" users", "magenta"))
-        final = 1804
+        final = 100
         list = self.driver.find_elements_by_xpath("//span[contains(text(), 'Following')]")
         while len(list) < (res-final):
             self.driver.execute_script("window.scrollBy(0,4000)")
             sleep(1)
             list = self.driver.find_elements_by_xpath("//span[contains(text(), 'Following')]")
-        pop_up = self.driver.find_element_by_xpath('/html/body/div[1]/div[1]/div/div/div[2]/button')
-        pop_up.click()
+        #pop_up = self.driver.find_element_by_xpath('/html/body/div[1]/div[1]/div/div/div[2]/button')
+        #pop_up.click()
         for i in range(len(list)):
             sleep(0.1)
             self.driver.execute_script("arguments[0].scrollIntoView()", list[i])
@@ -179,7 +186,7 @@ class MediumBot():
             
 
     def follow_random_article(self):
-        self.driver.get('https://medium.com/kaizen-habits/psychologists-explain-how-to-stop-overthinking-everything-e527962a393')
+        self.driver.get('https://towardsdatascience.com/10-algorithms-to-solve-before-your-python-coding-interview-feb74fb9bc27')
         sleep(3)
         claps = None
         while claps is None:

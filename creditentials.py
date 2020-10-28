@@ -1,2 +1,2 @@
-username = '' #enter your email or username
-password = '' #enter your password
+username = 'lazar.gugleta@gmail.com'
+password = 'NemanjaNijeGlupan99'
