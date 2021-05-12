@@ -1,2 +1,2 @@
-username = 'lazar.gugleta@gmail.com'
-password = 'NemanjaNijeGlupan99'
+username = ''
+password = ''
